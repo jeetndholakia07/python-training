@@ -17,7 +17,9 @@ jsonRegex = r"""
 roles_regex = r"""("\w+":"\w+")"""
 
 def is_valid_value(value):
-    return value is not None and value.strip().lower() not in ("","null")
+    if(value is None):
+        return False
+    return value!="" or value.lower()!="null"
 
 def formatDate(date):
     dateObj = datetime.strptime(date,"%Y-%m-%d")
@@ -65,7 +67,7 @@ def processFile(readFolder, writeFolder):
     try:
         input_path = f"{readFolder}/{fileName}"
         output_path = f"{writeFolder}/{fileName}"
-        with open(input_path,"r") as file:
+        with open(input_path,"r",newline='') as file:
             csvFile = csv.DictReader(file)
             columns = csvFile.fieldnames
             tempRows = []

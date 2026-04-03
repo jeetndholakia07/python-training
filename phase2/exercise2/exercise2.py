@@ -7,6 +7,9 @@ folders = ["incoming","inprocess","processed","generated","errored"]
 exitFolder = folders[4]
 CHUNK_SIZE = 150 # 150 records
 
+def is_empty(value):
+    return value.strip()==""
+
 def initializeFolders():
     for folder in folders:
         try:
@@ -52,6 +55,8 @@ def processFile(readFolder,writeFolder):
             header = next(csvFile)
             threads=[]
             for i,chunk in enumerate(generateChunks(csvFile),start=1):
+                    if any(is_empty(value) for row in chunk for value in row):
+                            raise ValueError(f"Invalid value found. Empty strings are not allowed.")
                     writeThread = threading.Thread(target=writeChunk,args=(f"{writeFolder}/chunk-{i}.csv",header, chunk))
                     threads.append(writeThread)
             for thread in threads:
@@ -60,7 +65,7 @@ def processFile(readFolder,writeFolder):
                 thread.join()
         moveFile(readFolder,folders[2])
         print("Completed processing successfully.")
-    except (FileNotFoundError,OSError) as e:
+    except (FileNotFoundError,OSError,ValueError,TypeError) as e:
         print("Unable to process file:",e)
         moveFile(readFolder,exitFolder)
 

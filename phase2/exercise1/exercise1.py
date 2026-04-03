@@ -16,10 +16,11 @@ jsonRegex = r"""
 """
 roles_regex = r"""("\w+":"\w+")"""
 
-def is_valid_value(value):
-    if(value is None):
-        return False
-    return value!="" or value.lower()!="null"
+def is_null(value):
+    return value.lower().strip()=="null"
+
+def is_empty(value):
+    return value.strip()==""
 
 def formatDate(date):
     dateObj = datetime.strptime(date,"%Y-%m-%d")
@@ -75,12 +76,14 @@ def processFile(readFolder, writeFolder):
                 birthdate = line.get("BIRTH_DATE")
                 roles = line.get("ROLES")
 
-                if is_valid_value(birthdate):
-                    if not re.match(birthdate_regex,birthdate):
+                if(not is_null(birthdate)):
+                    if is_empty(birthdate) or not re.match(birthdate_regex,birthdate):
                         raise ValueError(f"Invalid birthdate format: {birthdate}")
                     line["BIRTH_DATE"] = formatDate(birthdate)
 
-                if is_valid_value(roles):
+                if(not is_null(roles)):
+                    if is_empty(birthdate):
+                        raise ValueError(f"Invalid roles: {roles}")
                     jsonMatch = re.findall(jsonRegex,roles,re.VERBOSE)
                     if len(jsonMatch)==0:
                         raise ValueError(f"Invalid roles: {roles}")

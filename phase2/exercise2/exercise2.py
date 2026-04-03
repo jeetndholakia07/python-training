@@ -56,7 +56,7 @@ def processFile(readFolder,writeFolder):
             threads=[]
             for i,chunk in enumerate(generateChunks(csvFile),start=1):
                     if any(is_empty(value) for row in chunk for value in row):
-                            raise ValueError(f"Invalid value found. Empty strings are not allowed.")
+                        raise ValueError(f"Invalid value found. Empty strings are not allowed.")
                     writeThread = threading.Thread(target=writeChunk,args=(f"{writeFolder}/chunk-{i}.csv",header, chunk))
                     threads.append(writeThread)
             for thread in threads:

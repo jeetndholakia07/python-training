@@ -1,29 +1,34 @@
-def calculate_bill(*prices,**tax):
-    totalAmount, taxAmount, finalAmount = 0,0,0
-    for price in prices:
-        totalAmount+=price
+import sys
 
-    taxAmount = (totalAmount * tax.get("tax"))/100
+def calculate_bill(*prices, **tax):
+    totalAmount, taxAmount, finalAmount = 0, 0, 0
+    for price in prices:
+        totalAmount += price
+
+    taxAmount = (totalAmount * tax.get("tax")) / 100
     finalAmount = totalAmount + taxAmount
 
     return {
-        "Total Amount":totalAmount,
-        "Tax Amount":taxAmount,
-        "Payable Amount":finalAmount
+        "Total Amount": totalAmount,
+        "Tax Amount": taxAmount,
+        "Payable Amount": finalAmount,
     }
 
-userInput = input("Enter arguments space separated (e.g. 100 200 300 tax=18):").split(" ")
+# Get command line arguments
+args = sys.argv[1:]
 amounts = []
 tax = {}
 try:
-    for item in userInput:
-        if("=" in item):
-            key,val = item.split("=")
+    for item in args:
+        if "=" in item:
+            key, val = item.split("=")
             tax[key] = int(val)
         else:
             amounts.append(int(item))
+    if len(amounts) == 0 or not tax.get("tax"):
+        raise ValueError("Invalid format. Please provide amounts.")
     result = calculate_bill(*amounts, **tax)
-    for key,val in result.items():
+    for key, val in result.items():
         print(f"{key} : {val}")
-except (ValueError,TypeError):
-        print("Invalid format. Please provide integer value.")
+except (ValueError, TypeError):
+    print("Invalid format. Please provide integer value.")

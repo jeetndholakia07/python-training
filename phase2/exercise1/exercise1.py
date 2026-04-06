@@ -33,7 +33,7 @@ def formatRoles(roles):
         for word in item.split(":"):
             if("role" not in word):
                 roleList.append(word.replace('"',""))
-    return " ".join(roleList)
+    return ", ".join(roleList)
 
 def initializeFolders():
     for folder in folders:

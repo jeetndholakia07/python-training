@@ -1,6 +1,6 @@
 from fastapi import Depends, Query, APIRouter, Body
-from ..schemas.employee_schema import CreateEmployeeDTO, EmployeeDTO, UpdateEmployeeDTO
-from ..services.employee_service import (
+from schemas.employee_schema import CreateEmployeeDTO, EmployeeDTO, UpdateEmployeeDTO
+from services.employee_service import (
     get_employees_by_company,
     create_employee_func,
     get_employee_by_id,
@@ -8,10 +8,10 @@ from ..services.employee_service import (
     delete_employee_by_id,
     get_employee_date,
 )
-from ..config.db import get_db
-from ..schemas.response_schema import ResponseModel
-from ..schemas.pagination_schema import PaginatedData
-from ..schemas.status_schema import StatusEnum
+from config.db import get_db
+from schemas.response_schema import ResponseModel
+from schemas.pagination_schema import PaginatedData
+from schemas.status_schema import StatusEnum
 
 router = APIRouter(prefix="/employee", tags=["employee"])
 

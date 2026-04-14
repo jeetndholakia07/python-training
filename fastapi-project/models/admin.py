@@ -1,4 +1,4 @@
-from ..config.base import Base
+from config.base import Base
 from sqlalchemy import Column, String, Integer, TIMESTAMP, func
 
 class Admin(Base):

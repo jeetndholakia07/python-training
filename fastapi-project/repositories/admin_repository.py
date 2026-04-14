@@ -1,6 +1,6 @@
-from ..schemas.admin_schema import CreateAdminDTO
+from schemas.admin_schema import CreateAdminDTO
 from sqlalchemy.orm import Session
-from ..models.admin import Admin
+from models.admin import Admin
 
 def create_admin_repo(db: Session, admin: CreateAdminDTO, guid: str):
     db_admin = Admin(**admin.model_dump())

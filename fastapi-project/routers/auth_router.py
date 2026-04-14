@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends
-from ..schemas.admin_schema import CreateAdminDTO
-from ..config.db import get_db
-from ..schemas.response_schema import ResponseModel
-from ..services.auth_service import create_user
+from fastapi import APIRouter, Depends, Body
+from schemas.admin_schema import CreateAdminDTO, AdminLoginDTO
+from config.db import get_db
+from schemas.response_schema import ResponseModel
+from services.auth_service import create_user, verify_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -16,5 +16,5 @@ async def register_user(user: CreateAdminDTO, db=Depends(get_db)):
     return create_user(db, user)
 
 @router.post("/login")
-async def login_user():
-    pass
+async def login_user(db=Depends(get_db), user: AdminLoginDTO = Body()):
+    return verify_user(db, user)

@@ -1,7 +1,7 @@
-from ..schemas.company_schema import CreateCompanyDTO, UpdateCompanyDTO
+from schemas.company_schema import CreateCompanyDTO, UpdateCompanyDTO
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from ..models.company import Company
+from models.company import Company
 
 def create_company_repo(db: Session, company: CreateCompanyDTO, guid: str):
     data = company.model_dump(include={"companyName", "description", "status"})

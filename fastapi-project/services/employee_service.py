@@ -1,9 +1,9 @@
-from ..schemas.employee_schema import CreateEmployeeDTO, UpdateEmployeeDTO
-from ..utils.guid import generateGUID, is_valid_guid
-from ..services.company_service import get_company_id
+from schemas.employee_schema import CreateEmployeeDTO, UpdateEmployeeDTO
+from utils.guid import generateGUID, is_valid_guid
+from services.company_service import get_company_id
 from fastapi import HTTPException
-from ..schemas.status_schema import StatusEnum
-from ..repositories.employee_repository import (
+from schemas.status_schema import StatusEnum
+from repositories.employee_repository import (
     create_employee_repo,
     get_employees_repo,
     get_employee_by_id_repo,

@@ -12,10 +12,10 @@ from config.db import get_db
 from schemas.response_schema import ResponseModel
 from schemas.pagination_schema import PaginatedData
 from schemas.status_schema import StatusEnum
-from schemas.token_schema import TokenData
-from services.auth_service import get_current_user
+from schemas.user_schema import Role
+from services.auth_service import get_current_user, require_roles
 
-router = APIRouter(prefix="/employee", tags=["employee"], dependencies=[Depends(get_current_user)])
+router = APIRouter(prefix="/employee", tags=["employee"])
 
 @router.post(
     "",
@@ -23,8 +23,12 @@ router = APIRouter(prefix="/employee", tags=["employee"], dependencies=[Depends(
     status_code=201,
     response_model_exclude_none=True,
 )
-async def create_employee(employee: CreateEmployeeDTO, db=(Depends(get_db))):
-    return create_employee_func(db, emp=employee)
+async def create_employee(
+    employee: CreateEmployeeDTO,
+    db=(Depends(get_db)),
+    current_user=Depends(require_roles(Role.A, Role.C)),
+):
+    return create_employee_func(db, employee)
 
 @router.get(
     "",
@@ -34,10 +38,11 @@ async def create_employee(employee: CreateEmployeeDTO, db=(Depends(get_db))):
 )
 def get_all_employees(
     companyName: str = Query("", pattern="^[a-zA-Z]+$"),
-    status: StatusEnum | None = Query(default="A"),
+    status: StatusEnum | None = Query(default=None, examples="A"),
     pageLimit: int = Query(default=5),
     pageNo: int = Query(default=1),
     db=(Depends(get_db)),
+    current_user=Depends(get_current_user),
 ):
     return get_employees_by_company(db, companyName, status, pageLimit, pageNo)
 
@@ -53,6 +58,7 @@ def get_employees_by_date(
     pageLimit: int = Query(default=5),
     pageNo: int = Query(default=1),
     db=(Depends(get_db)),
+    current_user=Depends(get_current_user),
 ):
     return get_employee_date(db, start_date, end_date, pageLimit, pageNo)
 
@@ -62,7 +68,11 @@ def get_employees_by_date(
     status_code=200,
     response_model_exclude_none=True,
 )
-def get_employee_by_guid(employee_guid: str, db=(Depends(get_db))):
+def get_employee_by_guid(
+    employee_guid: str, 
+    db=(Depends(get_db)), 
+    current_user=Depends(get_current_user)
+):
     return get_employee_by_id(db, employee_guid)
 
 @router.patch(
@@ -72,7 +82,10 @@ def get_employee_by_guid(employee_guid: str, db=(Depends(get_db))):
     response_model_exclude_none=True,
 )
 async def update_employee(
-    employee_guid: str, employee: UpdateEmployeeDTO = Body(), db=(Depends(get_db))
+    employee_guid: str,
+    employee: UpdateEmployeeDTO = Body(),
+    db=(Depends(get_db)),
+    current_user=Depends(require_roles(Role.A, Role.C)),
 ):
     return update_employee_by_id(db, employee_guid, employee)
 
@@ -82,5 +95,9 @@ async def update_employee(
     status_code=200,
     response_model_exclude_none=True,
 )
-async def delete_employee(employee_guid: str, db=(Depends(get_db))):
+async def delete_employee(
+    employee_guid: str,
+    db=(Depends(get_db)),
+    current_user=Depends(require_roles(Role.A, Role.C)),
+):
     return delete_employee_by_id(db, employee_guid)

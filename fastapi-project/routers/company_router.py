@@ -4,37 +4,43 @@ from services.company_service import (
     get_companies,
     get_company_by_id,
     update_company_desc,
-    delete_company_by_id
+    delete_company_by_id,
 )
 from config.db import get_db
 from schemas.company_schema import CreateCompanyDTO, CompanyDTO, UpdateCompanyDTO
 from schemas.status_schema import StatusEnum
 from schemas.response_schema import ResponseModel
 from schemas.pagination_schema import PaginatedData
-from services.auth_service import get_current_user
+from schemas.user_schema import Role
+from services.auth_service import get_current_user, require_roles
 
-router = APIRouter(prefix="/company", tags=["company"], dependencies=[Depends(get_current_user)])
+router = APIRouter(prefix="/company", tags=["company"])
 
 @router.post(
     "",
     response_model=ResponseModel[None],
     status_code=201,
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
 )
-async def create_company(company: CreateCompanyDTO, db=(Depends(get_db))):
-    return create_company_func(db, company=company)
+async def create_company(
+    company: CreateCompanyDTO,
+    db=(Depends(get_db)),
+    current_user=Depends(require_roles(Role.A, Role.C)),
+):
+    return create_company_func(db, company)
 
 @router.get(
     "",
     response_model=ResponseModel[PaginatedData[CompanyDTO]],
     status_code=200,
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
 )
 def get_all_companies(
-    status: StatusEnum = Query(default=None, examples="A"),
+    status: StatusEnum | None = Query(default=None, examples="A"),
     pageLimit: int = Query(default=5),
     pageNo: int = Query(default=1),
-    db=(Depends(get_db))
+    db=(Depends(get_db)),
+    current_user=Depends(get_current_user),
 ):
     return get_companies(db, status, pageLimit, pageNo)
 
@@ -42,21 +48,24 @@ def get_all_companies(
     "/{company_guid}",
     response_model=ResponseModel[CompanyDTO],
     status_code=200,
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
 )
-def get_company_by_guid(company_guid: str, db=(Depends(get_db))):
+def get_company_by_guid(
+    company_guid: str, db=(Depends(get_db)), current_user=Depends(get_current_user)
+):
     return get_company_by_id(db, company_guid)
 
 @router.patch(
     "/{company_guid}",
     response_model=ResponseModel[None],
     status_code=201,
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
 )
 async def update_company(
-    company_guid: str, 
-    company: UpdateCompanyDTO = Body(), 
-    db=(Depends(get_db))
+    company_guid: str,
+    company: UpdateCompanyDTO = Body(),
+    db=(Depends(get_db)),
+    current_user=Depends(require_roles(Role.A, Role.C)),
 ):
     return update_company_desc(db, company_guid, company)
 
@@ -64,7 +73,11 @@ async def update_company(
     "/{company_guid}",
     response_model=ResponseModel[None],
     status_code=200,
-    response_model_exclude_none=True
+    response_model_exclude_none=True,
 )
-async def delete_company(company_guid: str, db=(Depends(get_db))):
+async def delete_company(
+    company_guid: str,
+    db=(Depends(get_db)),
+    current_user=Depends(require_roles(Role.A, Role.C)),
+):
     return delete_company_by_id(db, company_guid)

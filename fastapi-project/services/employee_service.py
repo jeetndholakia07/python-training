@@ -96,7 +96,7 @@ def get_employee_id(db: Session, empGuid: str):
     result = get_employee_id_repo(db, empGuid)
     if result is None:
         raise HTTPException(status_code=404, detail="Employee not found")
-    return result[0]
+    return result
 
 def get_employee_date(
     db: Session, startDate: str, endDate: str, pageLimit: int = 5, pageNo: int = 1

@@ -2,6 +2,7 @@ from schemas.employee_schema import CreateEmployeeDTO, UpdateEmployeeDTO
 from schemas.status_schema import StatusEnum
 from sqlalchemy.orm import Session
 from models.employee import Employee
+from models.company import Company
 from sqlalchemy import func
 
 def create_employee_repo(db: Session, emp: CreateEmployeeDTO, companyId, guid):
@@ -16,8 +17,8 @@ def get_employees_repo(
 ):
     query = db.query(Employee).join(Employee.company)
     if companyName:
-        query = query.filter(Employee.company.has(companyName=companyName))
-    if status:
+        query = query.filter(Company.companyName.ilike(f"%{companyName}%"))
+    if  status is not None:
         query = query.filter(Employee.status == status)
     total_count = query.with_entities(func.count()).scalar()
     employees = query.offset(offset).limit(limit).all()

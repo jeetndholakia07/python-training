@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from config.base import Base
-from models import company, employee, admin
+from models import company, employee, user
 from dotenv import load_dotenv
 import sys
 import os

@@ -14,12 +14,15 @@ app.include_router(auth_router, prefix="/v1")
 # Validation Exception Handler
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    message = "Validation errors:"
+    for error in exc.errors():
+        message+=f"Field {error['loc']}, Error: {error['msg']}"
     return JSONResponse(
         status_code=422,
         content={
             "success": False,
             "message": "Validation failed",
-            "detail": exc.errors(),
+            "detail": message,
         },
     )
 

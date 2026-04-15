@@ -1,5 +1,5 @@
 import jwt
-from jwt.exceptions import InvalidTokenError
+from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from datetime import datetime, timedelta, timezone
 import os
 from dotenv import load_dotenv
@@ -23,10 +23,19 @@ def create_access_token(data: dict, expires_delta: timedelta | None) -> str:
 def verify_access_token(token: str) -> dict[str, Any]:
     try:
         payload = jwt.decode(
-            token, os.getenv("JWT_SECRET"), algorithms=[os.getenv("JWT_ALGORITHM")]
+            token,
+            os.getenv("JWT_SECRET"),
+            algorithms=[os.getenv("JWT_ALGORITHM")],
+            options={"require": ["exp"]},
         )
         return payload
-    except InvalidTokenError as e:
+    except ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Credentials have expired",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",

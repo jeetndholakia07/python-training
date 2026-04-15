@@ -12,8 +12,10 @@ from config.db import get_db
 from schemas.response_schema import ResponseModel
 from schemas.pagination_schema import PaginatedData
 from schemas.status_schema import StatusEnum
+from schemas.token_schema import TokenData
+from services.auth_service import get_current_user
 
-router = APIRouter(prefix="/employee", tags=["employee"])
+router = APIRouter(prefix="/employee", tags=["employee"], dependencies=[Depends(get_current_user)])
 
 @router.post(
     "",
@@ -46,8 +48,8 @@ def get_all_employees(
     response_model_exclude_none=True,
 )
 def get_employees_by_date(
-    start_date: str = Query(pattern="^\d{2}-\d{2}-\d{4}$"),
-    end_date: str = Query(pattern="^\d{2}-\d{2}-\d{4}$"),
+    start_date: str = Query(),
+    end_date: str = Query(),
     pageLimit: int = Query(default=5),
     pageNo: int = Query(default=1),
     db=(Depends(get_db)),

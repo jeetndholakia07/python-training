@@ -11,8 +11,9 @@ from schemas.company_schema import CreateCompanyDTO, CompanyDTO, UpdateCompanyDT
 from schemas.status_schema import StatusEnum
 from schemas.response_schema import ResponseModel
 from schemas.pagination_schema import PaginatedData
+from services.auth_service import get_current_user
 
-router = APIRouter(prefix="/company", tags=["company"])
+router = APIRouter(prefix="/company", tags=["company"], dependencies=[Depends(get_current_user)])
 
 @router.post(
     "",

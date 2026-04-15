@@ -15,6 +15,9 @@ from repositories.employee_repository import (
 from .company_service import check_company_active
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
+import re
+
+date_regex = r"^\d{2}-\d{2}-\d{4}$"
 
 def create_employee_func(db: Session, emp: CreateEmployeeDTO):
     try:
@@ -98,12 +101,22 @@ def get_employee_id(db: Session, empGuid: str):
 def get_employee_date(
     db: Session, startDate: str, endDate: str, pageLimit: int = 5, pageNo: int = 1
 ):
+    dateMatch = re.match(date_regex, startDate)
+    dateMatch2 = re.match(date_regex, endDate)
+    if dateMatch is None or dateMatch2 is None:
+        raise HTTPException(status_code=400, detail="Invalid start or end date")
     pageLimit = int(pageLimit)
     pageNo = int(pageNo)
     offset = (pageNo - 1) * pageLimit
     start_dt = datetime.strptime(startDate, "%d-%m-%Y")
-    end_dt = datetime.strptime(endDate, "%d-%m-%Y") + timedelta(days=1)
-    results = get_employee_date_repo(db, start_dt, end_dt, pageLimit, offset)
+    end_dt = datetime.strptime(endDate, "%d-%m-%Y")
+    if end_dt < start_dt:
+        raise HTTPException(
+            status_code=400, detail="End date cannot be shorter than start date"
+        )
+    results = get_employee_date_repo(
+        db, start_dt, (end_dt + timedelta(days=1)), pageLimit, offset
+    )
     return {
         "success": True,
         "data": {

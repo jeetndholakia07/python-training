@@ -14,7 +14,7 @@ def create_employee_repo(db: Session, emp: CreateEmployeeDTO, companyId, guid):
 def get_employees_repo(
     db: Session, limit, offset, companyName: str, status: StatusEnum | None
 ):
-    query = db.query(Employee, Employee.company).join(Employee.company)
+    query = db.query(Employee).join(Employee.company)
     if companyName:
         query = query.filter(Employee.company.has(companyName=companyName))
     if status:

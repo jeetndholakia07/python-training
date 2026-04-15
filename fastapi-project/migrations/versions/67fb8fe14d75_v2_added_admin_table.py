@@ -25,7 +25,7 @@ def upgrade() -> None:
         sa.Column("guid", sa.String(36), nullable=False),
         sa.Column("username", sa.String(30), nullable=False),
         sa.Column("email", sa.String(100), nullable=False),
-        sa.Column("password", sa.String(100), nullable=False),
+        sa.Column("password_hash", sa.String(100), nullable=False),
         sa.Column(
             "createdAt", sa.TIMESTAMP, server_default=sa.func.now(), nullable=False
         ),

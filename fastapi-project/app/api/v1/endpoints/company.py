@@ -1,18 +1,18 @@
 from fastapi import APIRouter, Depends, Query, Body
-from services.company_service import (
+from app.services.company_service import (
     create_company_func,
     get_companies,
     get_company_by_id,
     update_company_desc,
     delete_company_by_id,
 )
-from config.db import get_db
-from schemas.company_schema import CreateCompanyDTO, CompanyDTO, UpdateCompanyDTO
-from schemas.status_schema import StatusEnum
-from schemas.response_schema import ResponseModel
-from schemas.pagination_schema import PaginatedData
-from schemas.user_schema import Role
-from services.auth_service import get_current_user, require_roles
+from app.core.config import get_db
+from app.schemas.company_schema import CreateCompanyDTO, CompanyDTO, UpdateCompanyDTO
+from app.schemas.status_schema import StatusEnum
+from app.schemas.response_schema import ResponseModel
+from app.schemas.pagination_schema import PaginatedData
+from app.schemas.user_schema import Role
+from app.services.auth_service import get_current_user, require_roles
 
 router = APIRouter(prefix="/company", tags=["company"])
 

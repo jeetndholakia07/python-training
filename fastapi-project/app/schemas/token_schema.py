@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from schemas.user_schema import Role
+from app.schemas.user_schema import Role
 
 class Token(BaseModel):
     access_token: str

@@ -1,21 +1,21 @@
 from sqlalchemy.orm import Session
-from schemas.user_schema import CreateUserDTO, UserLoginDTO
-from schemas.token_schema import Token, TokenData
-from schemas.user_schema import Role
-from utils.guid import generateGUID
+from app.schemas.user_schema import CreateUserDTO, UserLoginDTO
+from app.schemas.token_schema import Token, TokenData
+from app.schemas.user_schema import Role
+from app.utils.guid import generateGUID
 from fastapi import HTTPException, Depends, status
-from repositories.user_repository import (
+from app.repositories.user_repository import (
     create_admin_repo,
     get_user_by_email_repo,
     get_hashed_password_repo,
 )
-from utils.encryption import get_password_hash, verify_password
-from utils.token import create_access_token, verify_access_token
+from app.utils.encryption import get_password_hash, verify_password
+from app.utils.token import create_access_token, verify_access_token
 from datetime import timedelta
 import os
 from dotenv import load_dotenv
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from config.db import get_db
+from app.core.config import get_db
 import re
 
 load_dotenv()
@@ -86,7 +86,7 @@ def require_roles(*allowed_roles: Role):
     def role_checker(current_user: TokenData = Depends(get_current_user)):
         if current_user.role not in allowed_roles:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Access denied"
+                status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
             )
         return current_user
     return role_checker

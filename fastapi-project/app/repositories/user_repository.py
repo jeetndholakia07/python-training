@@ -1,6 +1,6 @@
-from schemas.user_schema import CreateUserDTO
+from app.schemas.user_schema import CreateUserDTO
 from sqlalchemy.orm import Session
-from models.user import User
+from app.models.user import User
 
 def create_admin_repo(db: Session, admin: CreateUserDTO, guid: str):
     db_user = User(**admin.model_dump(include={"username", "email", "role"}))

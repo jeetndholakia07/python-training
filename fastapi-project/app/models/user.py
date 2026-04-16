@@ -1,6 +1,6 @@
-from config.base import Base
+from app.core.config import Base
 from sqlalchemy import Column, String, Integer, TIMESTAMP, Enum, func
-from schemas.user_schema import Role
+from app.schemas.user_schema import Role
 
 class User(Base):
     __tablename__ = "user"

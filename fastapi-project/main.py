@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
-from routers.company_router import router as company_router
-from routers.employee_router import router as employee_router
-from routers.auth_router import router as auth_router
+from app.api.v1.endpoints.company import router as company_router
+from app.api.v1.endpoints.employee import router as employee_router
+from app.api.v1.endpoints.auth import router as auth_router
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 

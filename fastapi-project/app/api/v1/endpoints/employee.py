@@ -1,6 +1,6 @@
 from fastapi import Depends, Query, APIRouter, Body
-from schemas.employee_schema import CreateEmployeeDTO, EmployeeDTO, UpdateEmployeeDTO
-from services.employee_service import (
+from app.schemas.employee_schema import CreateEmployeeDTO, EmployeeDTO, UpdateEmployeeDTO
+from app.services.employee_service import (
     get_employees_by_company,
     create_employee_func,
     get_employee_by_id,
@@ -8,12 +8,12 @@ from services.employee_service import (
     delete_employee_by_id,
     get_employee_date,
 )
-from config.db import get_db
-from schemas.response_schema import ResponseModel
-from schemas.pagination_schema import PaginatedData
-from schemas.status_schema import StatusEnum
-from schemas.user_schema import Role
-from services.auth_service import get_current_user, require_roles
+from app.core.config import get_db
+from app.schemas.response_schema import ResponseModel
+from app.schemas.pagination_schema import PaginatedData
+from app.schemas.status_schema import StatusEnum
+from app.schemas.user_schema import Role
+from app.services.auth_service import get_current_user, require_roles
 
 router = APIRouter(prefix="/employee", tags=["employee"])
 

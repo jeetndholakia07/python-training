@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Body
-from schemas.user_schema import CreateUserDTO, UserLoginDTO
-from config.db import get_db
-from schemas.response_schema import ResponseModel
-from services.auth_service import create_user, verify_user
+from app.schemas.user_schema import CreateUserDTO, UserLoginDTO
+from app.core.config import get_db
+from app.schemas.response_schema import ResponseModel
+from app.services.auth_service import create_user, verify_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

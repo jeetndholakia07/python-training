@@ -1,8 +1,8 @@
-from schemas.employee_schema import CreateEmployeeDTO, UpdateEmployeeDTO
-from schemas.status_schema import StatusEnum
+from app.schemas.employee_schema import CreateEmployeeDTO, UpdateEmployeeDTO
+from app.schemas.status_schema import StatusEnum
 from sqlalchemy.orm import Session
-from models.employee import Employee
-from models.company import Company
+from app.models.employee import Employee
+from app.models.company import Company
 from sqlalchemy import func
 
 def create_employee_repo(db: Session, emp: CreateEmployeeDTO, companyId, guid):

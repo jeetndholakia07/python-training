@@ -1,9 +1,9 @@
-from schemas.company_schema import CreateCompanyDTO, UpdateCompanyDTO
-from utils.guid import generateGUID, is_valid_guid
+from app.schemas.company_schema import CreateCompanyDTO, UpdateCompanyDTO
+from app.utils.guid import generateGUID, is_valid_guid
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from schemas.status_schema import StatusEnum
-from repositories.company_respository import (
+from app.schemas.status_schema import StatusEnum
+from app.repositories.company_respository import (
     create_company_repo,
     get_all_company_repo,
     get_company_by_id_repo,

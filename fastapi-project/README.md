@@ -56,12 +56,18 @@ JWT_SECRET=your_secret_key
 JWT_ALGORITHM="HS256"
 TOKEN_EXPIRY_MINUTES=any_token_expiry
 
-### 5. Running the app
+### 5. Setup MySQL Database and Migrations
+Run the following command for applying database migrations.
+```bash
+alembic upgrade head
+```
+
+### 6. Running the app
 Development
 ```bash
 uvicorn main:app --reload
 ```
 Open the app on Swagger UI: http://localhost:8000/docs
 
-### 6. API Documentation
+### 7. API Documentation
 Swagger UI: http://localhost:8000/docs

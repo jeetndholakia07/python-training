@@ -12,23 +12,41 @@ The tech stack for the project is as follows:
 5) MySQL DB
 
 ## Project Structure
+
 fastapi-project/
- app/
- ├── api/
-  ├── v1/
-   ├── endpoints/
- ├── core/
- ├── models/
- ├── repositories/
- ├── schemas/
- └── services/
- └── utils/
+
+ &nbsp; app/
+
+ &ensp;├── api/
+
+ &emsp; ├── v1/
+
+ &nbsp; &ensp; ├── endpoints/
+
+ &ensp;├── core/
+
+ &ensp;├── models/
+
+ &ensp;├── repositories/
+
+ &ensp;├── schemas/
+
+ &ensp;└── services/
+
+ &ensp;└── utils/
+
 ├── migrations/
+
 ├── _init_.py
+
 ├── .env
+
 ├── alembic.ini
+
 ├── main.py
+
 ├── README.md
+
 ├── requirements.txt
 
 ## Setup Instructions

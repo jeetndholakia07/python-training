@@ -37,7 +37,7 @@ async def create_employee(
     response_model_exclude_none=True,
 )
 def get_all_employees(
-    companyName: str = Query("", pattern="^[a-zA-Z]+$"),
+    companyName: str | None = Query(default=None),
     status: StatusEnum | None = Query(default=None, examples="A"),
     pageLimit: int = Query(default=5),
     pageNo: int = Query(default=1),

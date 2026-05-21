@@ -5,7 +5,7 @@ from app.schemas.status_schema import StatusEnum
 class EmployeeBuilder:
     def __init__(self):
         self._data = {
-            "employee_name": EMPLOYEE_NAME,
+            "employeeName": EMPLOYEE_NAME,
             "guid": EMPLOYEE_GUID,
             "designation": EMPLOYEE_DESIGNATION,
             "salary": EMPLOYEE_SALARY,
@@ -13,7 +13,7 @@ class EmployeeBuilder:
         }
 
     def with_name(self, name: str):
-        self._data["employee_name"] = name
+        self._data["employeeName"] = name
         return self
 
     def with_guid(self, guid: str):
@@ -24,7 +24,7 @@ class EmployeeBuilder:
         self._data["designation"] = designation
         return self
 
-    def with_role(self, status: StatusEnum):
+    def with_status(self, status: StatusEnum):
         self._data["status"] = status
         return self
 

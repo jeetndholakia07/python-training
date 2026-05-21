@@ -5,14 +5,14 @@ from app.schemas.status_schema import StatusEnum
 class CompanyBuilder:
     def __init__(self):
         self._data = {
-            "company_name": COMPANY_NAME,
+            "companyName": COMPANY_NAME,
             "guid": COMPANY_GUID,
             "description": COMPANY_DESCRIPTION,
             "status": COMPANY_ACTIVE
         }
 
     def with_name(self, name: str):
-        self._data["company_name"] = name
+        self._data["companyName"] = name
         return self
 
     def with_guid(self, guid: str):
@@ -23,7 +23,7 @@ class CompanyBuilder:
         self._data["description"] = description
         return self
 
-    def with_role(self, status: StatusEnum):
+    def with_status(self, status: StatusEnum):
         self._data["status"] = status
         return self
 

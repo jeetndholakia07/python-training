@@ -19,7 +19,8 @@ class TestPasswordUtils:
         assert result is True
 
     def test_verify_password_invalid(self):
-        password = INVALID_PASSWORD
-        hashed_password = get_password_hash(password)
-        result = verify_password(password, hashed_password)
+        correct_password = VALID_PASSWORD
+        wrong_password = INVALID_PASSWORD
+        hashed_password = get_password_hash(correct_password)
+        result = verify_password(wrong_password, hashed_password)
         assert result is False

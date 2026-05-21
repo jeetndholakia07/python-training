@@ -17,11 +17,10 @@ from dotenv import load_dotenv
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.core.config import get_db
 import re
+from app.utils.regex import email_regex, password_regex
 
 load_dotenv()
 security = HTTPBearer()
-email_regex = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-password_regex = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%])[A-Za-z\d@#$%]{8,}$"
 
 def create_user(db: Session, user: CreateUserDTO):
     try:
@@ -50,7 +49,7 @@ def verify_user(db: Session, user: UserLoginDTO):
         if db_user is None:
             raise HTTPException(status_code=401, detail="Invalid email or password")
         hashed_password = get_hashed_password_repo(db, user.email)
-        if verify_password(user.password, hashed_password[0]) == False:
+        if not verify_password(user.password, hashed_password[0]):
             raise HTTPException(status_code=401, detail="Invalid email or password")
         expiryTime = timedelta(minutes=int(os.getenv("TOKEN_EXPIRY_MINUTES")))
         data = TokenData(**db_user).model_dump()

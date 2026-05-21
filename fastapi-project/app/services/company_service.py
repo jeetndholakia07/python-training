@@ -16,13 +16,13 @@ from app.repositories.company_respository import (
 
 def create_company_func(db: Session, company: CreateCompanyDTO):
     try:
-        if company.status not in ["A", "D"]:
-            raise HTTPException(status_code=400, detail="Invalid status format")
+        if company.status not in [StatusEnum.A, StatusEnum.D]:
+            raise HTTPException(status_code=400, detail="Invalid status format.")
         check_company_by_name(db, company.companyName)
         guid = generateGUID()
         create_company_repo(db, company, guid)
         db.commit()
-        return {"success": True, "message": "Company created successfully"}
+        return {"success": True, "message": "Company created successfully."}
     except Exception:
         db.rollback()
         raise
@@ -98,4 +98,4 @@ def check_company_active(db: Session, companyGuid: str):
 def check_company_by_name(db: Session, name: str):
     result = get_company_by_name_repo(db, name)
     if result is not None:
-        raise HTTPException(status_code=400, detail="Company already exists")
+        raise HTTPException(status_code=400, detail="Company already exists.")

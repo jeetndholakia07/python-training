@@ -12,7 +12,7 @@ def get_all_company_repo(db: Session, status, limit, offset):
     query = db.query(Company)
     if status is not None:
         query = query.filter(Company.status == status)
-    total_count = query.with_entities(func.count()).scalar()
+    total_count = query.count()
     companies = query.offset(offset).limit(limit).all()
     data = [
         {
@@ -23,8 +23,10 @@ def get_all_company_repo(db: Session, status, limit, offset):
         }
         for c in companies
     ]
-
-    return {"data": data, "totalItems": total_count}
+    return {
+        "data": data,
+        "totalItems": total_count
+    }
 
 def get_company_by_id_repo(db: Session, companyGuid: str):
     company = db.query(Company).filter(Company.guid == companyGuid).first()

@@ -32,12 +32,12 @@ def verify_access_token(token: str) -> dict[str, Any]:
     except ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credentials have expired",
+            detail="Credentials have expired.",
             headers={"WWW-Authenticate": "Bearer"},
         )
     except InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
+            detail="Could not validate credentials.",
             headers={"WWW-Authenticate": "Bearer"},
         )

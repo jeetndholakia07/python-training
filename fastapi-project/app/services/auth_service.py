@@ -27,7 +27,7 @@ def create_user(db: Session, user: CreateUserDTO):
         verify_email_password(email=user.email, password=user.password)
         db_user = get_user_by_email_repo(db, user.email)
         if db_user is not None:
-            raise HTTPException(status_code=400, detail="User already exists")
+            raise HTTPException(status_code=400, detail="User already exists.")
         guid = generateGUID()
         data = CreateUserDTO(
             username=user.username,
@@ -37,7 +37,7 @@ def create_user(db: Session, user: CreateUserDTO):
         )
         create_admin_repo(db, data, guid)
         db.commit()
-        return {"success": True, "message": "User registered successfully"}
+        return {"success": True, "message": "User registered successfully."}
     except Exception:
         db.rollback()
         raise
@@ -47,10 +47,10 @@ def verify_user(db: Session, user: UserLoginDTO):
         verify_email_password(email=user.email, password=user.password)
         db_user = get_user_by_email_repo(db, user.email)
         if db_user is None:
-            raise HTTPException(status_code=401, detail="Invalid email or password")
+            raise HTTPException(status_code=401, detail="Invalid email or password.")
         hashed_password = get_hashed_password_repo(db, user.email)
         if not verify_password(user.password, hashed_password[0]):
-            raise HTTPException(status_code=401, detail="Invalid email or password")
+            raise HTTPException(status_code=401, detail="Invalid email or password.")
         expiryTime = timedelta(minutes=int(os.getenv("TOKEN_EXPIRY_MINUTES")))
         data = TokenData(**db_user).model_dump()
         access_token = create_access_token(
@@ -68,24 +68,24 @@ def get_current_user(
     if credentials.scheme.lower() != "bearer":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication scheme",
+            detail="Invalid authentication scheme.",
         )
     payload = verify_access_token(token)
     if payload is None:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="Invalid credentials.")
     email = payload.get("email")
     if email is None:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="Invalid credentials.")
     user = get_user_by_email_repo(db, email)
     if user is None:
-        raise HTTPException(status_code=401, detail="User not found")
+        raise HTTPException(status_code=401, detail="User not found.")
     return TokenData(**user)
 
 def require_roles(*allowed_roles: Role):
     def role_checker(current_user: TokenData = Depends(get_current_user)):
         if current_user.role not in allowed_roles:
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
+                status_code=status.HTTP_403_FORBIDDEN, detail="Access denied."
             )
         return current_user
     return role_checker
@@ -94,4 +94,4 @@ def verify_email_password(email: str, password: str):
     emailMatch = re.match(email_regex, email)
     passwordMatch = re.match(password_regex, password)
     if emailMatch is None or passwordMatch is None:
-        raise HTTPException(status_code=400, detail="Invalid email or password")
+        raise HTTPException(status_code=400, detail="Invalid email or password.")

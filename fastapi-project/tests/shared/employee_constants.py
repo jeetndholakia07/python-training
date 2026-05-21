@@ -1,0 +1,12 @@
+from app.schemas.status_schema import StatusEnum
+
+EMPLOYEE_GUID = "6abe9b29-7540-46f6-8564-2b63c85a6228"
+EMPLOYEE_GUID2 = "82dd48dd-f8c1-4f27-ba73-1e42e58923a1"
+EMPLOYEE_NAME = "John Doe"
+EMPLOYEE_DESIGNATION = "Frontend Developer"
+EMPLOYEE_SALARY = 20000
+EMPLOYEE_NAME2 = "Jane Smith"
+EMPLOYEE_DESIGNATION2 = "Project Manager"
+EMPLOYEE_SALARY2 = 50000
+EMPLOYEE_ACTIVE = StatusEnum.A
+EMPLOYEE_DELETED = StatusEnum.D

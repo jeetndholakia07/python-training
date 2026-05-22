@@ -131,3 +131,13 @@ Development
 uv run uvicorn main:app --reload
 ```
 Open the app on Swagger UI: http://localhost:8000/docs
+
+## Testing
+The app has unit tests for the service layer, and integration tests for the repository and 
+controller or api layer using pytest and httpx asyncio.
+
+To run the tests, use the following command after activating the virtual environment:
+
+```bash
+pytest
+```

@@ -1,7 +1,4 @@
-from app.models.company import Company
-
 from app.repositories.company_respository import create_company_repo
-
 from tests.integration.repository.base.base_repo_test import BaseRepoTest
 from tests.shared.company_constants import *
 import pytest

@@ -1,9 +1,10 @@
 import pytest
 from unittest.mock import patch
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from app.services.auth_service import create_user
 from tests.shared.user_constants import *
 from tests.unit.service.base.base_service_test import BaseServiceTest
+from tests.shared.response_constants import *
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
 
@@ -24,7 +25,7 @@ class TestCreateUser(BaseServiceTest):
             mock_hash.return_value = PASSWORD_HASH
             result = create_user(self.db, request)
             assert result["success"] is True
-            assert result["message"] == "User registered successfully."
+            assert result["message"] == USER_REGISTER_SUCCESS
             mock_create_repo.assert_called_once()
             self.db.commit.assert_called_once()
 
@@ -35,18 +36,18 @@ class TestCreateUser(BaseServiceTest):
             with pytest.raises(HTTPException) as exc:
                 create_user(self.db, request)
 
-            self.assert_exception(exc, 400, "User already exists.")
+            self.assert_exception(exc, status.HTTP_400_BAD_REQUEST, USER_EXISTS)
 
     def test_create_user_invalid_email(self):
         request = self.user_factory.createUserRequest()
         request.email = INVALID_EMAIL
         with pytest.raises(HTTPException) as exc:
             create_user(self.db, request)
-        self.assert_exception(exc, 400, "Invalid email or password.")
+        self.assert_exception(exc, status.HTTP_400_BAD_REQUEST, INVALID_CREDENTIALS)
 
     def test_create_user_invalid_password(self):
         request = self.user_factory.createUserRequest()
         request.password = INVALID_PASSWORD
         with pytest.raises(HTTPException) as exc:
             create_user(self.db, request)
-        self.assert_exception(exc, 400, "Invalid email or password.")
+        self.assert_exception(exc, status.HTTP_400_BAD_REQUEST, INVALID_CREDENTIALS)

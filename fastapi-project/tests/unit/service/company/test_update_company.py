@@ -3,7 +3,8 @@ from tests.shared.company_constants import *
 from app.services.company_service import update_company_desc
 import pytest
 from unittest.mock import patch
-from fastapi import HTTPException
+from tests.shared.response_constants import *
+from fastapi import HTTPException, status
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
 
@@ -19,7 +20,7 @@ class TestUpdateCompany(BaseServiceTest):
             mock_company_id.return_value = 1
             result = update_company_desc(self.db, COMPANY_GUID, request)
             assert result["success"] is True
-            assert result["message"] == "Company updated successfully"
+            assert result["message"] == COMPANY_UPDATE_SUCCESS
             mock_update_repo.assert_called_once_with(self.db, request, 1)
             self.db.commit.assert_called_once()
 
@@ -29,7 +30,7 @@ class TestUpdateCompany(BaseServiceTest):
             mock_guid.return_value = False
             with pytest.raises(HTTPException) as exc:
                 update_company_desc(self.db, COMPANY_GUID, request)
-            self.assert_exception(exc, 400, "Invalid GUID")
+            self.assert_exception(exc, status.HTTP_400_BAD_REQUEST, INVALID_GUID_MSG)
 
     def test_update_company_rollback_on_exception(self):
         request = self.company_factory.updateCompanyRequest()
@@ -40,7 +41,7 @@ class TestUpdateCompany(BaseServiceTest):
         ) as mock_update_repo:
             mock_guid.return_value = True
             mock_company_id.return_value = 1
-            mock_update_repo.side_effect = Exception("DB Error")
+            mock_update_repo.side_effect = Exception(DB_ERROR)
             with pytest.raises(Exception):
                 update_company_desc(self.db, COMPANY_GUID, request)
             self.db.rollback.assert_called_once()

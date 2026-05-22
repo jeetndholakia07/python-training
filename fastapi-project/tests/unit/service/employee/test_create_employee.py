@@ -4,7 +4,8 @@ from tests.shared.company_constants import *
 from app.services.employee_service import create_employee_func
 import pytest
 from unittest.mock import patch
-from fastapi import HTTPException
+from tests.shared.response_constants import *
+from fastapi import HTTPException, status
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
 
@@ -19,7 +20,6 @@ class TestCreateEmployee(BaseServiceTest):
         ) as mock_guid, patch(
             "app.services.employee_service.create_employee_repo"
         ) as mock_create_repo:
-
             request = self.employee_factory.createEmployeeRequest()
 
             mock_company_id.return_value = 1
@@ -29,7 +29,7 @@ class TestCreateEmployee(BaseServiceTest):
             result = create_employee_func(self.db, request)
 
             assert result["success"] is True
-            assert result["message"] == "Employee created successfully"
+            assert result["message"] == EMPLOYEE_CREATE_SUCCESS
 
             mock_create_repo.assert_called_once_with(self.db, request, 1, EMPLOYEE_GUID)
 
@@ -37,12 +37,12 @@ class TestCreateEmployee(BaseServiceTest):
 
     def test_create_employee_invalid_status(self):
         request = self.employee_factory.createEmployeeRequest()
-        request.status = "X"
+        request.status = INVALID_EMPLOYEE_STATUS
 
         with pytest.raises(HTTPException) as exc:
             create_employee_func(self.db, request)
 
-        self.assert_exception(exc, 400, "Invalid status format")
+        self.assert_exception(exc, status.HTTP_400_BAD_REQUEST, INVALID_STATUS_FORMAT)
 
     def test_create_employee_rollback_on_exception(self):
         with patch(
@@ -54,14 +54,13 @@ class TestCreateEmployee(BaseServiceTest):
         ) as mock_guid, patch(
             "app.services.employee_service.create_employee_repo"
         ) as mock_create_repo:
-
             request = self.employee_factory.createEmployeeRequest()
 
             mock_company_id.return_value = 1
             mock_company_active.return_value = None
             mock_guid.return_value = EMPLOYEE_GUID
 
-            mock_create_repo.side_effect = Exception("DB Error")
+            mock_create_repo.side_effect = Exception(DB_ERROR)
 
             with pytest.raises(Exception):
                 create_employee_func(self.db, request)

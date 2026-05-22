@@ -4,6 +4,7 @@ from fastapi import HTTPException, status
 from app.services.auth_service import get_current_user
 from tests.shared.user_constants import *
 from tests.unit.service.base.base_service_test import BaseServiceTest
+from tests.shared.response_constants import *
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
 
@@ -37,7 +38,7 @@ class TestVerifyToken(BaseServiceTest):
         with pytest.raises(HTTPException) as exc:
             get_current_user(self.db, credentials)
         assert exc.value.status_code == status.HTTP_401_UNAUTHORIZED
-        assert exc.value.detail == "Invalid authentication scheme."
+        assert exc.value.detail == INVALID_AUTH_SCHEME
 
     def test_get_current_user_invalid_token(self):
         credentials = Mock()
@@ -47,8 +48,8 @@ class TestVerifyToken(BaseServiceTest):
             mock_verify.return_value = None
             with pytest.raises(HTTPException) as exc:
                 get_current_user(self.db, credentials)
-            assert exc.value.status_code == 401
-            assert exc.value.detail == "Invalid credentials."
+            assert exc.value.status_code == status.HTTP_401_UNAUTHORIZED
+            assert exc.value.detail == INVALID_TOKEN_MSG
 
     def test_get_current_user_missing_email(self):
         credentials = Mock()
@@ -58,7 +59,7 @@ class TestVerifyToken(BaseServiceTest):
             mock_verify.return_value = {}
             with pytest.raises(HTTPException) as exc:
                 get_current_user(self.db, credentials)
-            assert exc.value.status_code == 401
+            assert exc.value.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_get_current_user_not_found(self):
         credentials = Mock()
@@ -73,5 +74,5 @@ class TestVerifyToken(BaseServiceTest):
             mock_get_user.return_value = None
         with pytest.raises(HTTPException) as exc:
             get_current_user(self.db, credentials)
-        assert exc.value.status_code == 401
-        assert exc.value.detail == "Could not validate credentials."
+        assert exc.value.status_code == status.HTTP_401_UNAUTHORIZED
+        assert exc.value.detail == AUTH_INVALID_MSG

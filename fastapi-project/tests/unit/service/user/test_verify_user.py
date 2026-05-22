@@ -4,7 +4,8 @@ from tests.shared.user_constants import *
 import pytest
 import os
 from unittest.mock import patch
-from fastapi import HTTPException
+from fastapi import HTTPException, status
+from tests.shared.response_constants import *
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
 
@@ -41,8 +42,8 @@ class TestVerifyUser(BaseServiceTest):
                 verify_user(self.db, request)
             self.assert_exception(
                 exc,
-                401,
-                "Invalid email or password.",
+                status.HTTP_401_UNAUTHORIZED,
+                INVALID_CREDENTIALS,
             )
 
     def test_verify_user_invalid_password(self):
@@ -66,8 +67,8 @@ class TestVerifyUser(BaseServiceTest):
                 verify_user(self.db, request)
             self.assert_exception(
                 exc,
-                401,
-                "Invalid email or password.",
+                status.HTTP_401_UNAUTHORIZED,
+                INVALID_CREDENTIALS,
             )
 
     def test_verify_user_invalid_email(self):
@@ -77,8 +78,8 @@ class TestVerifyUser(BaseServiceTest):
             verify_user(self.db, request)
         self.assert_exception(
             exc,
-            400,
-            "Invalid email or password.",
+            status.HTTP_400_BAD_REQUEST,
+            INVALID_CREDENTIALS,
         )
 
     def test_verify_user_invalid_password_format(self):
@@ -88,6 +89,6 @@ class TestVerifyUser(BaseServiceTest):
             verify_user(self.db, request)
         self.assert_exception(
             exc,
-            400,
-            "Invalid email or password.",
+            status.HTTP_400_BAD_REQUEST,
+            INVALID_CREDENTIALS,
         )

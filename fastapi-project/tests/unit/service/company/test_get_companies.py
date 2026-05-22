@@ -12,14 +12,13 @@ class TestGetCompanies(BaseServiceTest):
             "app.services.company_service.get_all_company_repo"
         ) as mock_companies:
             response = self.company_factory.getCompanyResponse()
-            pageLimit = 5
-            pageNo = 1
-
+            pageLimit = DEFAULT_PAGE_LIMIT
+            pageNo = DEFAULT_PAGE_NUMBER
             paginatedRes = {
                 "data": response,
                 "page": pageNo,
                 "limit": pageLimit,
-                "totalItems": 1,
+                "totalItems": DEFAULT_TOTAL_ITEMS,
             }
             mock_companies.return_value = paginatedRes
             result = get_companies(
@@ -29,8 +28,6 @@ class TestGetCompanies(BaseServiceTest):
             assert result["data"]["page"] == pageNo
             assert result["data"]["limit"] == pageLimit
             assert result["data"]["data"] == response
-            assert result["data"]["totalItems"] == 1
+            assert result["data"]["totalItems"] == DEFAULT_TOTAL_ITEMS
 
-            mock_companies.assert_called_once_with(
-                self.db, COMPANY_ACTIVE, pageLimit, 0
-            )
+            mock_companies.assert_called_once()

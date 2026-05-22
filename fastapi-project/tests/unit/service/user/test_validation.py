@@ -1,7 +1,8 @@
 from tests.unit.service.base.base_service_test import BaseServiceTest
 from tests.shared.user_constants import *
 from app.services.auth_service import verify_email_password
-from fastapi import HTTPException
+from fastapi import HTTPException, status
+from tests.shared.response_constants import *
 import pytest
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
@@ -21,8 +22,8 @@ class TestValidation(BaseServiceTest):
             )
         self.assert_exception(
             exc,
-            400,
-            "Invalid email or password.",
+            status.HTTP_400_BAD_REQUEST,
+            INVALID_CREDENTIALS,
         )
 
     def test_verify_invalid_password(self):
@@ -33,6 +34,6 @@ class TestValidation(BaseServiceTest):
             )
         self.assert_exception(
             exc,
-            400,
-            "Invalid email or password.",
+            status.HTTP_400_BAD_REQUEST,
+            INVALID_CREDENTIALS,
         )

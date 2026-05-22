@@ -22,13 +22,13 @@ date_regex = r"^\d{2}-\d{2}-\d{4}$"
 def create_employee_func(db: Session, emp: CreateEmployeeDTO):
     try:
         if emp.status not in ["A", "D"]:
-            raise HTTPException(status_code=400, detail="Invalid status format")
+            raise HTTPException(status_code=400, detail="Invalid status format.")
         companyId = get_company_id(db, emp.companyGuid)
         check_company_active(db, emp.companyGuid)
         guid = generateGUID()
         create_employee_repo(db, emp, companyId, guid)
         db.commit()
-        return {"success": True, "message": "Employee created successfully"}
+        return {"success": True, "message": "Employee created successfully."}
     except Exception:
         db.rollback()
         raise
@@ -60,10 +60,10 @@ def get_employees_by_company(
 def get_employee_by_id(db: Session, empGuid: str):
     try:
         if not is_valid_guid(empGuid):
-            raise HTTPException(status_code=400, detail="Invalid GUID")
+            raise HTTPException(status_code=400, detail="Invalid GUID.")
         result = get_employee_by_id_repo(db, empGuid)
         if result is None:
-            raise HTTPException(status_code=404, detail="Employee not found")
+            raise HTTPException(status_code=404, detail="Employee not found.")
         return {"success": True, "data": result}
     except Exception:
         raise
@@ -71,11 +71,11 @@ def get_employee_by_id(db: Session, empGuid: str):
 def update_employee_by_id(db: Session, empGuid: str, emp: UpdateEmployeeDTO):
     try:
         if not is_valid_guid(empGuid):
-            raise HTTPException(status_code=400, detail="Invalid GUID")
+            raise HTTPException(status_code=400, detail="Invalid GUID.")
         employeeId = get_employee_id(db, empGuid)
         update_employee_id_repo(db, emp, employeeId)
         db.commit()
-        return {"success": True, "message": "Employee updated successfully"}
+        return {"success": True, "message": "Employee updated successfully."}
     except Exception:
         db.rollback()
         raise
@@ -83,11 +83,11 @@ def update_employee_by_id(db: Session, empGuid: str, emp: UpdateEmployeeDTO):
 def delete_employee_by_id(db: Session, empGuid: str):
     try:
         if not is_valid_guid(empGuid):
-            raise HTTPException(status_code=400, detail="Invalid GUID")
+            raise HTTPException(status_code=400, detail="Invalid GUID.")
         employeeId = get_employee_id(db, empGuid)
         delete_employee_by_id_repo(db, employeeId)
         db.commit()
-        return {"success": True, "message": "Employee deleted successfully"}
+        return {"success": True, "message": "Employee deleted successfully."}
     except Exception:
         db.rollback()
         raise
@@ -95,7 +95,7 @@ def delete_employee_by_id(db: Session, empGuid: str):
 def get_employee_id(db: Session, empGuid: str):
     result = get_employee_id_repo(db, empGuid)
     if result is None:
-        raise HTTPException(status_code=404, detail="Employee not found")
+        raise HTTPException(status_code=404, detail="Employee not found.")
     return result
 
 def get_employee_date(
@@ -104,7 +104,7 @@ def get_employee_date(
     dateMatch = re.match(date_regex, startDate)
     dateMatch2 = re.match(date_regex, endDate)
     if dateMatch is None or dateMatch2 is None:
-        raise HTTPException(status_code=400, detail="Invalid start or end date")
+        raise HTTPException(status_code=400, detail="Invalid start or end date.")
     pageLimit = int(pageLimit)
     pageNo = int(pageNo)
     offset = (pageNo - 1) * pageLimit
@@ -112,7 +112,7 @@ def get_employee_date(
     end_dt = datetime.strptime(endDate, "%d-%m-%Y")
     if end_dt < start_dt:
         raise HTTPException(
-            status_code=400, detail="End date cannot be shorter than start date"
+            status_code=400, detail="End date cannot be shorter than start date."
         )
     results = get_employee_date_repo(
         db, start_dt, (end_dt + timedelta(days=1)), pageLimit, offset

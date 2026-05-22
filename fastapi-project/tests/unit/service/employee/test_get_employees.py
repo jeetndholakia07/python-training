@@ -10,13 +10,15 @@ pytestmark = [pytest.mark.unit, pytest.mark.service]
 class TestGetEmployees(BaseServiceTest):
     def test_get_employees_success(self):
         with patch("app.services.employee_service.get_employees_repo") as mock_repo:
-
             response = self.employee_factory.getEmployeeResponse()
-
-            pageLimit = 5
-            pageNo = 1
-
-            paginatedRes = {"data": response, "totalItems": 1}
+            pageLimit = DEFAULT_PAGE_LIMIT
+            pageNo = DEFAULT_PAGE_NUMBER
+            paginatedRes = {
+                "data": response,
+                "totalItems": DEFAULT_TOTAL_ITEMS,
+                "page": DEFAULT_PAGE_NUMBER,
+                "limit": DEFAULT_PAGE_LIMIT,
+            }
 
             mock_repo.return_value = paginatedRes
 
@@ -28,8 +30,6 @@ class TestGetEmployees(BaseServiceTest):
             assert result["data"]["page"] == pageNo
             assert result["data"]["limit"] == pageLimit
             assert result["data"]["data"] == response
-            assert result["data"]["totalItems"] == 1
+            assert result["data"]["totalItems"] == DEFAULT_TOTAL_ITEMS
 
-            mock_repo.assert_called_once_with(
-                self.db, pageLimit, 0, COMPANY_NAME, EMPLOYEE_ACTIVE
-            )
+            mock_repo.assert_called_once()

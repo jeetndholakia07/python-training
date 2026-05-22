@@ -5,6 +5,7 @@ import pytest
 from unittest.mock import patch
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 from tests.shared.user_constants import *
+from tests.shared.response_constants import *
 
 pytestmark = [pytest.mark.unit, pytest.mark.util]
 
@@ -65,7 +66,7 @@ class TestJWTUtils:
             with pytest.raises(HTTPException) as exc:
                 verify_access_token(token)
             assert exc.value.status_code == status.HTTP_401_UNAUTHORIZED
-            assert exc.value.detail == "Credentials have expired."
+            assert exc.value.detail == TOKEN_EXPIRY_MSG
             assert exc.value.headers == {"WWW-Authenticate": "Bearer"}
 
     def test_verify_access_token_invalid(self):
@@ -75,5 +76,5 @@ class TestJWTUtils:
             with pytest.raises(HTTPException) as exc:
                 verify_access_token(token)
             assert exc.value.status_code == status.HTTP_401_UNAUTHORIZED
-            assert exc.value.detail == "Could not validate credentials."
+            assert exc.value.detail == AUTH_INVALID_MSG
             assert exc.value.headers == {"WWW-Authenticate": "Bearer"}

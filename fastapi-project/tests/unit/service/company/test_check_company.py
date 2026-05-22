@@ -3,7 +3,8 @@ from tests.shared.company_constants import *
 from app.services.company_service import check_company_by_name
 import pytest
 from unittest.mock import patch
-from fastapi import HTTPException
+from tests.shared.response_constants import COMPANY_EXISTS
+from fastapi import HTTPException, status
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
 
@@ -23,4 +24,4 @@ class TestCheckCompanyByName(BaseServiceTest):
             mock_repo.return_value = self.company_builder.build()
             with pytest.raises(HTTPException) as exc:
                 check_company_by_name(self.db, COMPANY_NAME)
-            self.assert_exception(exc, 400, "Company already exists.")
+            self.assert_exception(exc, status.HTTP_400_BAD_REQUEST, COMPANY_EXISTS)

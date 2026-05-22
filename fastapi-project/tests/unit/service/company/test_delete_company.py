@@ -3,7 +3,8 @@ from tests.shared.company_constants import *
 from app.services.company_service import delete_company_by_id
 import pytest
 from unittest.mock import patch
-from fastapi import HTTPException
+from tests.shared.response_constants import *
+from fastapi import HTTPException, status
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
 
@@ -18,7 +19,7 @@ class TestDeleteCompany(BaseServiceTest):
             mock_company_id.return_value = 1
             result = delete_company_by_id(self.db, COMPANY_GUID)
             assert result["success"] is True
-            assert result["message"] == "Company deleted successfully"
+            assert result["message"] == COMPANY_DELETE_SUCCESS
             mock_delete_repo.assert_called_once_with(self.db, 1)
             self.db.commit.assert_called_once()
 
@@ -27,7 +28,7 @@ class TestDeleteCompany(BaseServiceTest):
             mock_guid.return_value = False
             with pytest.raises(HTTPException) as exc:
                 delete_company_by_id(self.db, COMPANY_GUID)
-            self.assert_exception(exc, 400, "Invalid GUID")
+            self.assert_exception(exc, status.HTTP_400_BAD_REQUEST, INVALID_GUID_MSG)
 
     def test_delete_company_rollback_on_exception(self):
         with patch("app.services.company_service.is_valid_guid") as mock_guid, patch(
@@ -37,7 +38,7 @@ class TestDeleteCompany(BaseServiceTest):
         ) as mock_delete_repo:
             mock_guid.return_value = True
             mock_company_id.return_value = 1
-            mock_delete_repo.side_effect = Exception("DB Error")
+            mock_delete_repo.side_effect = Exception(DB_ERROR)
             with pytest.raises(Exception):
                 delete_company_by_id(self.db, COMPANY_GUID)
             self.db.rollback.assert_called_once()

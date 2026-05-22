@@ -4,6 +4,7 @@ from app.services.auth_service import require_roles
 from tests.shared.user_constants import *
 from app.schemas.token_schema import TokenData
 from tests.unit.service.base.base_service_test import BaseServiceTest
+from tests.shared.response_constants import *
 
 class TestRequireRole(BaseServiceTest):
     def test_require_roles_allowed(self):
@@ -30,4 +31,4 @@ class TestRequireRole(BaseServiceTest):
             checker(user)
 
         assert exc.value.status_code == status.HTTP_403_FORBIDDEN
-        assert exc.value.detail == "Access denied."
+        assert exc.value.detail == ACCESS_DENIED

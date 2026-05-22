@@ -3,7 +3,8 @@ from tests.shared.company_constants import *
 from app.services.company_service import get_company_by_id
 import pytest
 from unittest.mock import patch
-from fastapi import HTTPException
+from tests.shared.response_constants import *
+from fastapi import HTTPException, status
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
 
@@ -24,7 +25,7 @@ class TestGetCompanyById(BaseServiceTest):
             mock_guid.return_value = False
             with pytest.raises(HTTPException) as exc:
                 get_company_by_id(self.db, COMPANY_GUID)
-            self.assert_exception(exc, 400, "Invalid GUID")
+            self.assert_exception(exc, status.HTTP_400_BAD_REQUEST, INVALID_GUID_MSG)
 
     def test_get_company_by_id_not_found(self):
         with patch("app.services.company_service.is_valid_guid") as mock_guid, patch(
@@ -34,4 +35,4 @@ class TestGetCompanyById(BaseServiceTest):
             mock_repo.return_value = None
             with pytest.raises(HTTPException) as exc:
                 get_company_by_id(self.db, COMPANY_GUID)
-            self.assert_exception(exc, 404, "Company not found")
+            self.assert_exception(exc, status.HTTP_404_NOT_FOUND, COMPANY_NOT_FOUND)

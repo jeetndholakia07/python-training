@@ -3,7 +3,8 @@ from tests.shared.company_constants import *
 from app.services.company_service import get_company_id
 import pytest
 from unittest.mock import patch
-from fastapi import HTTPException
+from tests.shared.response_constants import COMPANY_NOT_FOUND
+from fastapi import HTTPException, status
 
 pytestmark = [pytest.mark.unit, pytest.mark.service]
 
@@ -19,4 +20,4 @@ class TestGetCompanyId(BaseServiceTest):
             mock_repo.return_value = None
             with pytest.raises(HTTPException) as exc:
                 get_company_id(self.db, COMPANY_GUID)
-            self.assert_exception(exc, 404, "Company not found")
+            self.assert_exception(exc, status.HTTP_404_NOT_FOUND, COMPANY_NOT_FOUND)

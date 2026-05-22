@@ -50,10 +50,10 @@ def get_companies(
 def get_company_by_id(db: Session, companyGuid: str):
     try:
         if not is_valid_guid(companyGuid):
-            raise HTTPException(status_code=400, detail="Invalid GUID")
+            raise HTTPException(status_code=400, detail="Invalid GUID.")
         result = get_company_by_id_repo(db, companyGuid)
         if result is None:
-            raise HTTPException(status_code=404, detail="Company not found")
+            raise HTTPException(status_code=404, detail="Company not found.")
         return {"success": True, "data": result}
     except Exception:
         raise
@@ -61,11 +61,11 @@ def get_company_by_id(db: Session, companyGuid: str):
 def update_company_desc(db: Session, companyGuid: str, company: UpdateCompanyDTO):
     try:
         if not is_valid_guid(companyGuid):
-            raise HTTPException(status_code=400, detail="Invalid GUID")
+            raise HTTPException(status_code=400, detail="Invalid GUID.")
         companyId = get_company_id(db, companyGuid)
         update_company_desc_repo(db, company, companyId)
         db.commit()
-        return {"success": True, "message": "Company updated successfully"}
+        return {"success": True, "message": "Company updated successfully."}
     except Exception:
         db.rollback()
         raise
@@ -73,11 +73,11 @@ def update_company_desc(db: Session, companyGuid: str, company: UpdateCompanyDTO
 def delete_company_by_id(db: Session, companyGuid: str):
     try:
         if not is_valid_guid(companyGuid):
-            raise HTTPException(status_code=400, detail="Invalid GUID")
+            raise HTTPException(status_code=400, detail="Invalid GUID.")
         companyId = get_company_id(db, companyGuid)
         delete_company_by_id_repo(db, companyId)
         db.commit()
-        return {"success": True, "message": "Company deleted successfully"}
+        return {"success": True, "message": "Company deleted successfully."}
     except Exception:
         db.rollback()
         raise
@@ -85,15 +85,15 @@ def delete_company_by_id(db: Session, companyGuid: str):
 def get_company_id(db: Session, companyGuid: str):
     result = get_company_id_repo(db, companyGuid)
     if result is None:
-        raise HTTPException(status_code=404, detail="Company not found")
+        raise HTTPException(status_code=404, detail="Company not found.")
     return result[0]
 
 def check_company_active(db: Session, companyGuid: str):
     result = get_company_status_repo(db, companyGuid)
     if result is None:
-        raise HTTPException(status_code=404, detail="Company not found")
+        raise HTTPException(status_code=404, detail="Company not found.")
     if result[0] == "D":
-        raise HTTPException(status_code=400, detail="Invalid company")
+        raise HTTPException(status_code=400, detail="Invalid company.")
 
 def check_company_by_name(db: Session, name: str):
     result = get_company_by_name_repo(db, name)

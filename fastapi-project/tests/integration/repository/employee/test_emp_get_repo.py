@@ -15,7 +15,7 @@ import pytest
 
 pytestmark = [pytest.mark.repository, pytest.mark.integration]
 
-class GetRepoTest(BaseRepoTest):
+class TestEmpGetRepo(BaseRepoTest):
     def test_get_employees_repo_should_return_all_employees(self, db_session):
         company = self.seed_company(db_session)
         emp1 = EmployeeBuilder().build()

@@ -10,7 +10,7 @@ import pytest
 
 pytestmark = [pytest.mark.repository, pytest.mark.integration]
 
-class UpdateRepoTest(BaseRepoTest):
+class TestEmpUpdateRepo(BaseRepoTest):
     def test_update_company_desc_repo_should_update_description(self, db_session):
         company = self.seed_company(db_session)
         request = self.company_factory.updateCompanyRequest()

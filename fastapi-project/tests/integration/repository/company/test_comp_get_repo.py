@@ -15,7 +15,7 @@ import pytest
 
 pytestmark = [pytest.mark.repository, pytest.mark.integration]
 
-class GetRepoTest(BaseRepoTest):
+class TestCompGetRepo(BaseRepoTest):
     def test_get_all_company_repo_should_return_all_companies(self, db_session):
         company1 = CompanyBuilder().build()
         company2 = (

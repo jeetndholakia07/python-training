@@ -5,7 +5,7 @@ import pytest
 
 pytestmark = [pytest.mark.repository, pytest.mark.integration]
 
-class CreateRepoTest(BaseRepoTest):
+class TestCompCreateRepo(BaseRepoTest):
     def test_create_company_repo_should_create_company(self, db_session):
         request = self.company_factory.createCompanyRequest()
         create_company_repo(db=db_session, company=request, guid=COMPANY_GUID)

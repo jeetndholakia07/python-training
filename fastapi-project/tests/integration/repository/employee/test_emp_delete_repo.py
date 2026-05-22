@@ -9,7 +9,7 @@ import pytest
 
 pytestmark = [pytest.mark.repository, pytest.mark.integration]
 
-class DeleteRepoTest(BaseRepoTest):
+class TestEmpDeleteRepo(BaseRepoTest):
     def test_delete_employee_by_id_repo_should_soft_delete_employee(self, db_session):
         company = self.seed_company(db_session)
         employee = self.seed_employee(db=db_session, company_id=company.id)

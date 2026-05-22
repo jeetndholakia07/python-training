@@ -30,7 +30,6 @@ def db_session():
         Base.metadata.drop_all(bind=engine)
         engine.dispose()
 
-
 @pytest_asyncio.fixture
 async def async_client():
     app.dependency_overrides[get_current_user] = override_get_current_user

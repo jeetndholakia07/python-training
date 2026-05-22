@@ -9,7 +9,7 @@ import pytest
 
 pytestmark = [pytest.mark.repository, pytest.mark.integration]
 
-class CreateRepoTest(BaseRepoTest):
+class TestEmpCreateRepo(BaseRepoTest):
     def test_create_employee_repo_should_create_employee(self, db_session):
         company = self.seed_company(db_session)
         request = self.employee_factory.createEmployeeRequest()
